@@ -1,0 +1,52 @@
+# Dependabot configuration
+# Mantém dependências atualizadas automaticamente
+
+version: 2
+updates:
+  # Dependências do NPM/Yarn
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    # Agrupa updates de dependências relacionadas
+    groups:
+      nestjs:
+        patterns:
+          - "@nestjs/*"
+      typeorm:
+        patterns:
+          - "typeorm"
+          - "pg"
+      testing:
+        patterns:
+          - "jest"
+          - "@types/jest"
+          - "supertest"
+          - "@types/supertest"
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    labels:
+      - "github-actions"
+      - "automated"
+    commit-message:
+      prefix: "ci"
