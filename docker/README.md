@@ -10,8 +10,7 @@ Configuração completa do Docker para desenvolvimento e produção do PokéAren
 ├── Dockerfile.dev          # Imagem de desenvolvimento (hot-reload)
 ├── docker-compose.yml      # Orquestração de serviços
 ├── .dockerignore          # Arquivos ignorados no build
-├── .env.docker            # Exemplo de variáveis de ambiente
-└── Makefile              # Comandos facilitadores
+└── .env.docker            # Exemplo de variáveis de ambiente
 ```
 
 ## 🚀 Quick Start
@@ -19,11 +18,14 @@ Configuração completa do Docker para desenvolvimento e produção do PokéAren
 ### Desenvolvimento
 
 ```bash
-# Inicia ambiente de desenvolvimento
-make dev
-
-# Ou manualmente:
+# Inicia ambiente de desenvolvimento (PostgreSQL + API)
 docker compose --profile dev up -d
+
+# Ver logs
+docker compose logs -f
+
+# Parar
+docker compose down
 ```
 
 **Acesse:**
@@ -35,10 +37,10 @@ docker compose --profile dev up -d
 
 ```bash
 # Inicia ambiente de produção
-make prod
-
-# Ou manualmente:
 docker compose --profile prod up -d
+
+# Ver logs
+docker compose logs -f
 ```
 
 ## 📦 Serviços Disponíveis
@@ -49,10 +51,15 @@ Banco de dados principal.
 
 ```bash
 # Inicia apenas o PostgreSQL
-make db
+yarn db:up
+# ou: docker compose up -d postgres
 
 # Acessa shell do PostgreSQL
-make shell-db
+docker compose exec postgres psql -U postgres -d pokearena_db
+
+# Parar PostgreSQL
+yarn db:down
+# ou: docker compose stop postgres
 ```
 
 **Conexão:**
@@ -86,8 +93,8 @@ Aplicação NestJS.
 GUI para gerenciar PostgreSQL (opcional).
 
 ```bash
-# Inicia PgAdmin
-make pgadmin
+# Inicia PgAdmin junto com dev
+docker compose --profile dev --profile tools up -d
 ```
 
 **Acesse:** http://localhost:5050
@@ -104,80 +111,119 @@ make pgadmin
    - Username: postgres
    - Password: postgres
 
-## 🛠️ Comandos (Makefile)
+## 🛠️ Comandos Úteis
 
 ### Desenvolvimento
 
 ```bash
-make dev              # Inicia ambiente de desenvolvimento
-make dev-build        # Build e inicia
-make dev-logs         # Mostra logs
+# Inicia ambiente de desenvolvimento
+docker compose --profile dev up -d
+
+# Build e inicia
+docker compose --profile dev up -d --build
+
+# Mostra logs
+docker compose logs -f api-dev
 ```
 
 ### Produção
 
 ```bash
-make prod             # Inicia ambiente de produção
-make prod-build       # Build e inicia
-make prod-logs        # Mostra logs
+# Inicia ambiente de produção
+docker compose --profile prod up -d
+
+# Build e inicia
+docker compose --profile prod up -d --build
+
+# Mostra logs
+docker compose logs -f api
 ```
 
 ### Database
 
 ```bash
-make db               # Inicia PostgreSQL
-make pgadmin          # Inicia PgAdmin
-make migrate          # Executa migrations
-make migrate-generate # Gera nova migration
-make migrate-revert   # Reverte migration
+# Inicia PostgreSQL
+yarn db:up
+
+# Inicia PgAdmin
+docker compose --profile tools up -d pgadmin
+
+# Executa migrations
+yarn migration:run
+
+# Gera nova migration (depois de modificar entities)
+yarn typeorm migration:generate database/migrations/NomeDaMigration -d src/config/database.config.ts
+
+# Reverte migration
+yarn migration:revert
 ```
 
 ### Testes
 
 ```bash
-make test             # Testes unitários
-make test-cov         # Testes com coverage
-make test-e2e         # Testes E2E
+# Testes unitários
+yarn test
+
+# Testes com coverage
+yarn test:cov
+
+# Testes E2E
+yarn test:e2e
 ```
 
 ### Linting & Formatting
 
 ```bash
-make lint             # Executa linter
-make format           # Formata código
+# Executa linter
+yarn lint
+
+# Formata código
+yarn format
 ```
 
 ### Gerenciamento
 
 ```bash
-make logs             # Logs de todos os containers
-make logs-api         # Logs apenas da API
-make logs-db          # Logs apenas do PostgreSQL
-make ps               # Lista containers
-make down             # Para containers
-make restart          # Reinicia containers
+# Logs de todos os containers
+docker compose logs -f
+
+# Logs apenas da API
+docker compose logs -f api-dev
+
+# Logs apenas do PostgreSQL
+docker compose logs -f postgres
+
+# Lista containers
+docker compose ps
+
+# Para containers
+docker compose down
+
+# Reinicia containers
+docker compose restart
 ```
 
 ### Limpeza
 
 ```bash
-make clean            # Para e remove volumes
-make clean-all        # Remove tudo (containers, volumes, images)
-make prune            # Limpa recursos não utilizados
+# Para e remove volumes
+yarn db:clean
+
+# Remove tudo (containers, volumes, images)
+docker compose down -v --rmi all
+
+# Limpa recursos não utilizados
+docker system prune -a
 ```
 
 ### Shell
 
 ```bash
-make shell            # Acessa shell do container da API
-make shell-db         # Acessa shell do PostgreSQL
-```
+# Acessa shell do container da API
+docker compose exec api-dev sh
 
-### Informações
-
-```bash
-make info             # Mostra informações do ambiente
-make help             # Lista todos os comandos
+# Acessa shell do PostgreSQL
+docker compose exec postgres psql -U postgres -d pokearena_db
 ```
 
 ## 🔧 Configuração
@@ -246,13 +292,13 @@ Runner: ~150MB (imagem final)
 
 ```bash
 # Verifica logs
-make logs-api
+docker compose logs -f api-dev
 
 # Verifica status
-make ps
+docker compose ps
 
 # Rebuild
-make dev-build
+docker compose --profile dev up -d --build
 ```
 
 ### Database connection refused
@@ -292,10 +338,10 @@ docker compose --profile dev build --no-cache
 
 ```bash
 # Para tudo e remove volumes
-make clean
+yarn db:clean
 
 # Rebuild e inicia
-make dev-build
+docker compose --profile dev up -d --build
 ```
 
 ## 🚀 Deploy
@@ -374,7 +420,7 @@ curl http://localhost:3000/health
 docker compose exec postgres pg_isready -U postgres
 
 # Logs em tempo real
-make logs
+docker compose logs -f
 ```
 
 ### Métricas
@@ -393,7 +439,7 @@ Para adicionar novos serviços ao docker-compose:
 
 1. Adicione o serviço no `docker-compose.yml`
 2. Configure profile apropriado
-3. Adicione comandos no `Makefile`
+3. Adicione scripts no `package.json` se necessário
 4. Atualize documentação
 
 ## 📝 Changelog
@@ -403,6 +449,6 @@ Para adicionar novos serviços ao docker-compose:
 - ✅ Ambiente de desenvolvimento com hot-reload
 - ✅ Ambiente de produção otimizado
 - ✅ PgAdmin opcional
-- ✅ Makefile com comandos facilitadores
+- ✅ package.json com scripts simplificados
 - ✅ Health checks configurados
 - ✅ Multi-stage build otimizado

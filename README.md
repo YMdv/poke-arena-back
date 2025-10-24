@@ -119,7 +119,7 @@ Exemplo:
 
 - **Containerização:** Docker, Docker Compose
 - **CI/CD:** GitHub Actions
-- **Automação:** Makefile
+- **Automação:** package.json scripts
 
 ## 📦 Pré-requisitos
 
@@ -149,9 +149,6 @@ cd poke-arena-back
 cp .env.docker .env
 
 # 3. Inicie o ambiente de desenvolvimento
-make dev
-
-# Ou manualmente:
 docker compose --profile dev up -d
 ```
 
@@ -184,28 +181,44 @@ yarn start:dev
 
 ## 💻 Uso
 
-### Desenvolvimento
+### Desenvolvimento Local (Recomendado)
 
 ```bash
-# Com Docker
-make dev              # Inicia ambiente completo
-make dev-logs         # Vê os logs
-make down             # Para o ambiente
+# 1. Subir PostgreSQL
+yarn db:up
 
-# Local
-yarn start:dev        # Inicia com hot-reload
-yarn start:debug      # Inicia com debugger
+# 2. Rodar aplicação
+yarn start:dev
+
+# 3. Ver logs do PostgreSQL (opcional)
+docker-compose logs -f postgres
+
+# 4. Parar PostgreSQL (quando terminar)
+yarn db:down
+```
+
+### Desenvolvimento com Docker Completo
+
+```bash
+# Subir tudo (PostgreSQL + API)
+docker-compose --profile dev up -d
+
+# Ver logs
+docker-compose logs -f
+
+# Parar
+docker-compose down
 ```
 
 ### Produção
 
 ```bash
-# Com Docker
-make prod             # Inicia produção
-
 # Local
-yarn build            # Compila TypeScript
-yarn start:prod       # Inicia aplicação
+yarn build
+yarn start:prod
+
+# Docker
+docker-compose --profile prod up -d
 ```
 
 ### Acessar Aplicação
@@ -326,16 +339,20 @@ curl -X POST http://localhost:3000/batalhar/1/2
 ### Executar Testes
 
 ```bash
-# Com Docker
-make test             # Testes unitários
-make test-cov         # Com coverage
-make test-e2e         # Testes E2E
+# Testes unitários
+yarn test
 
-# Local
-yarn test             # Testes unitários
-yarn test:cov         # Com coverage
-yarn test:e2e         # Testes E2E
-yarn test:all         # Todos os testes
+# Watch mode
+yarn test:watch
+
+# Com coverage
+yarn test:cov
+
+# Testes E2E
+yarn test:e2e
+
+# Todos os testes
+yarn test:all
 ```
 
 ### Coverage
@@ -367,25 +384,37 @@ src/
 ### Quick Start
 
 ```bash
-# Desenvolvimento
-make dev
+# Desenvolvimento (PostgreSQL + API)
+docker compose --profile dev up -d
 
 # Produção
-make prod
+docker compose --profile prod up -d
 
 # Com PgAdmin
 docker compose --profile dev --profile tools up -d
+
+# Parar tudo
+docker compose down
 ```
 
 ### Comandos Úteis
 
 ```bash
-make help             # Lista todos os comandos
-make logs             # Ver logs
-make shell            # Acessa shell do container
-make db               # Inicia apenas PostgreSQL
-make pgadmin          # Inicia PgAdmin
-make clean            # Limpa tudo
+# Ver containers rodando
+docker compose ps
+
+# Ver logs
+docker compose logs -f
+
+# Ver logs de um serviço específico
+docker compose logs -f postgres
+docker compose logs -f api-dev
+
+# Acessar shell do container da API
+docker compose exec api-dev sh
+
+# Limpar tudo (containers e volumes)
+docker compose down -v
 ```
 
 ### PgAdmin
@@ -491,8 +520,7 @@ poke-arena-back/
 ├── docker/                  # Docker configs
 ├── Dockerfile               # Imagem produção
 ├── Dockerfile.dev           # Imagem desenvolvimento
-├── docker-compose.yml       # Orquestração
-└── Makefile                 # Comandos facilitadores
+└── docker-compose.yml       # Orquestração
 ```
 
 ## 🤝 Contribuindo
