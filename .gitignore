@@ -44,3 +44,7 @@ lerna-debug.log*
 temp/
 tmp/
 *.tmp
+
+# Docker
+docker-compose.override.yml
+.docker/

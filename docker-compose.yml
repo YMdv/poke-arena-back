@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  # ================================
+  # PostgreSQL Database
+  # ================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: pokearena-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      POSTGRES_DB: ${DATABASE_NAME:-pokearena_db}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - '${DATABASE_PORT:-5432}:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pokearena-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ================================
+  # PokéArena API (Desenvolvimento)
+  # ================================
+  api-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: pokearena-api-dev
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: ${DATABASE_USER:-postgres}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      DATABASE_NAME: ${DATABASE_NAME:-pokearena_db}
+      DATABASE_SYNC: ${DATABASE_SYNC:-false}
+      DATABASE_LOGGING: ${DATABASE_LOGGING:-true}
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+    ports:
+      - '${PORT:-3000}:3000'
+      - '9229:9229' # Debug port
+    volumes:
+      # Hot-reload: monta código fonte
+      - ./src:/app/src
+      - ./test:/app/test
+      # Evita montar node_modules (usa do container)
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pokearena-network
+    command: yarn start:dev
+    profiles:
+      - dev
+
+  # ================================
+  # PokéArena API (Produção)
+  # ================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pokearena-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: ${DATABASE_USER:-postgres}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      DATABASE_NAME: ${DATABASE_NAME:-pokearena_db}
+      DATABASE_SYNC: ${DATABASE_SYNC:-false}
+      DATABASE_LOGGING: ${DATABASE_LOGGING:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - '${PORT:-3000}:3000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pokearena-network
+    profiles:
+      - prod
+
+  # ================================
+  # PgAdmin (Opcional - GUI para PostgreSQL)
+  # ================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pokearena-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@pokearena.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - '${PGADMIN_PORT:-5050}:80'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - pokearena-network
+    profiles:
+      - tools
+
+# ================================
+# Volumes
+# ================================
+volumes:
+  postgres_data:
+    driver: local
+    name: pokearena-postgres-data
+  pgadmin_data:
+    driver: local
+    name: pokearena-pgadmin-data
+
+# ================================
+# Networks
+# ================================
+networks:
+  pokearena-network:
+    driver: bridge
+    name: pokearena-network

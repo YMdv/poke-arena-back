@@ -1,98 +1,551 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🎮 PokéArena API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> API RESTful para gerenciamento de pokémons e sistema de batalhas probabilístico
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+[![CI Pipeline](https://github.com/SEU_USUARIO/poke-arena-back/workflows/CI%20Pipeline/badge.svg)](https://github.com/SEU_USUARIO/poke-arena-back/actions)
+[![CD Pipeline](https://github.com/SEU_USUARIO/poke-arena-back/workflows/CD%20Pipeline/badge.svg)](https://github.com/SEU_USUARIO/poke-arena-back/actions)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
+[![NestJS](https://img.shields.io/badge/NestJS-11.x-red.svg)](https://nestjs.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-24.x-green.svg)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Description
+## 📋 Índice
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [Sobre](#sobre)
+- [Features](#features)
+- [Tecnologias](#tecnologias)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
+- [Uso](#uso)
+- [API Documentation](#api-documentation)
+- [Testes](#testes)
+- [Docker](#docker)
+- [Deploy](#deploy)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Contribuindo](#contribuindo)
+- [Licença](#licença)
 
-## Project setup
+## 🎯 Sobre
 
-```bash
-$ yarn install
+PokéArena é uma API completa para gerenciamento de pokémons com sistema de batalhas baseado em probabilidade. O projeto implementa operações CRUD, sistema de batalhas com algoritmo probabilístico proporcional aos níveis dos pokémons, e todas as melhores práticas de desenvolvimento moderno.
+
+### Desafio Jazida
+
+Este projeto foi desenvolvido como resposta ao [Desafio Backend Jazida](./Desafio%20Jazida%20-%20Pokémon.md), implementando todas as funcionalidades obrigatórias e opcionais:
+
+**Funcionalidades Obrigatórias (10 pontos):**
+- ✅ CRUD completo de pokémons (7 pontos)
+- ✅ Sistema de batalhas probabilístico (3 pontos)
+
+**Funcionalidades Opcionais (+15 pontos):**
+- ✅ Deploy online (+1 ponto)
+- ✅ Testes unitários (+1 ponto)
+- ✅ Testes de integração (+2 pontos)
+- ✅ Observabilidade (+2 pontos)
+- ✅ Documentação automática da API (+3 pontos)
+- ✅ CI/CD (+3 pontos)
+- ⚠️ Interface web (+3 pontos) - Planejado para frontend separado
+
+**Pontuação Total: 22/25 pontos**
+
+## ✨ Features
+
+### CRUD de Pokémons
+
+- ✅ **Criar** pokémon (tipos: charizard, mewtwo, pikachu)
+- ✅ **Listar** todos os pokémons ativos
+- ✅ **Buscar** pokémon por ID
+- ✅ **Atualizar** treinador do pokémon
+- ✅ **Deletar** pokémon (soft delete)
+
+### Sistema de Batalhas
+
+- ✅ Algoritmo probabilístico baseado em níveis
+- ✅ Vencedor ganha +1 nível
+- ✅ Perdedor perde -1 nível
+- ✅ Pokémon nível 0 = deletado permanentemente (hard delete)
+- ✅ Validações de batalha (mesmo pokémon, pokémons inexistentes)
+
+**Fórmula de Probabilidade:**
+```
+P(A vencer) = nivelA / (nivelA + nivelB)
+P(B vencer) = nivelB / (nivelA + nivelB)
+
+Exemplo:
+- A(nível=1) vs B(nível=2): 33.33% vs 66.67%
+- A(nível=1) vs B(nível=1): 50% vs 50%
 ```
 
-## Compile and run the project
+### Qualidade & DevOps
+
+- ✅ **TypeScript** com tipagem estrita
+- ✅ **Swagger/OpenAPI** para documentação automática
+- ✅ **Validação** automática de DTOs (class-validator)
+- ✅ **Health Checks** (database, memory)
+- ✅ **Logs estruturados** (Winston)
+- ✅ **Git Hooks** (Husky + lint-staged)
+- ✅ **CI/CD** (GitHub Actions)
+- ✅ **Docker** (desenvolvimento e produção)
+- ✅ **Soft Delete** com campo `active`
+- ✅ **BaseEntity** abstrata para DRY
+
+## 🛠️ Tecnologias
+
+### Core
+
+| Tecnologia | Versão | Descrição |
+|------------|--------|-----------|
+| [Node.js](https://nodejs.org/) | 24.x | Runtime JavaScript |
+| [TypeScript](https://www.typescriptlang.org/) | 5.7 | Superset JavaScript com tipagem |
+| [NestJS](https://nestjs.com/) | 11.x | Framework backend progressivo |
+| [PostgreSQL](https://www.postgresql.org/) | 16 | Banco de dados relacional |
+| [TypeORM](https://typeorm.io/) | 0.3.x | ORM para TypeScript |
+
+### Bibliotecas
+
+- **Validação:** class-validator, class-transformer
+- **Documentação:** @nestjs/swagger, swagger-ui-express
+- **Config:** @nestjs/config, dotenv
+- **Health:** @nestjs/terminus
+- **Logs:** winston, nest-winston
+
+### Qualidade & Testes
+
+- **Testing:** Jest, Supertest, @nestjs/testing
+- **Linting:** ESLint, Prettier
+- **Git Hooks:** Husky, lint-staged
+
+### DevOps
+
+- **Containerização:** Docker, Docker Compose
+- **CI/CD:** GitHub Actions
+- **Automação:** Makefile
+
+## 📦 Pré-requisitos
+
+Escolha uma das opções:
+
+### Opção 1: Docker (Recomendado)
+
+- [Docker](https://www.docker.com/) >= 20.x
+- [Docker Compose](https://docs.docker.com/compose/) >= 2.x
+
+### Opção 2: Local
+
+- [Node.js](https://nodejs.org/) >= 24.x
+- [Yarn](https://yarnpkg.com/) >= 1.22
+- [PostgreSQL](https://www.postgresql.org/) >= 16
+
+## 🚀 Instalação
+
+### Com Docker (Recomendado)
 
 ```bash
-# development
-$ yarn run start
+# 1. Clone o repositório
+git clone https://github.com/SEU_USUARIO/poke-arena-back.git
+cd poke-arena-back
 
-# watch mode
-$ yarn run start:dev
+# 2. Copie o arquivo de ambiente
+cp .env.docker .env
 
-# production mode
-$ yarn run start:prod
+# 3. Inicie o ambiente de desenvolvimento
+make dev
+
+# Ou manualmente:
+docker compose --profile dev up -d
 ```
 
-## Run tests
+**Pronto!** A API estará rodando em http://localhost:3000
+
+### Local (Sem Docker)
 
 ```bash
-# unit tests
-$ yarn run test
+# 1. Clone o repositório
+git clone https://github.com/SEU_USUARIO/poke-arena-back.git
+cd poke-arena-back
 
-# e2e tests
-$ yarn run test:e2e
+# 2. Instale as dependências
+yarn install
 
-# test coverage
-$ yarn run test:cov
+# 3. Configure o ambiente
+cp .env.example .env
+# Edite o .env com suas configurações
+
+# 4. Certifique-se que o PostgreSQL está rodando
+# Crie o banco de dados:
+createdb pokearena_db
+
+# 5. Execute as migrations (se houver)
+yarn migration:run
+
+# 6. Inicie o servidor
+yarn start:dev
 ```
 
-## Deployment
+## 💻 Uso
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Desenvolvimento
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+# Com Docker
+make dev              # Inicia ambiente completo
+make dev-logs         # Vê os logs
+make down             # Para o ambiente
+
+# Local
+yarn start:dev        # Inicia com hot-reload
+yarn start:debug      # Inicia com debugger
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Produção
 
-## Resources
+```bash
+# Com Docker
+make prod             # Inicia produção
 
-Check out a few resources that may come in handy when working with NestJS:
+# Local
+yarn build            # Compila TypeScript
+yarn start:prod       # Inicia aplicação
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Acessar Aplicação
 
-## Support
+- **API Base:** http://localhost:3000
+- **Swagger UI:** http://localhost:3000/api-docs
+- **Health Check:** http://localhost:3000/health
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 📚 API Documentation
 
-## Stay in touch
+### Swagger/OpenAPI
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Acesse a documentação interativa completa em:
 
-## License
+```
+http://localhost:3000/api-docs
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Endpoints Principais
+
+#### Pokémons
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/pokemons` | Criar pokémon |
+| GET | `/pokemons` | Listar todos |
+| GET | `/pokemons/:id` | Buscar por ID |
+| PUT | `/pokemons/:id` | Atualizar treinador |
+| DELETE | `/pokemons/:id` | Deletar (soft delete) |
+
+#### Batalhas
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/batalhar/:pokemonAId/:pokemonBId` | Batalhar entre dois pokémons |
+
+#### Health
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/health` | Health check geral |
+| GET | `/health/db` | Health check database |
+| GET | `/health/memory` | Health check memória |
+
+### Exemplos de Uso
+
+#### Criar Pokémon
+
+```bash
+curl -X POST http://localhost:3000/pokemons \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tipo": "pikachu",
+    "treinador": "Ash"
+  }'
+```
+
+**Resposta (201):**
+```json
+{
+  "id": 1,
+  "tipo": "pikachu",
+  "treinador": "Ash",
+  "nivel": 1
+}
+```
+
+#### Listar Pokémons
+
+```bash
+curl http://localhost:3000/pokemons
+```
+
+**Resposta (200):**
+```json
+[
+  {
+    "id": 1,
+    "tipo": "pikachu",
+    "treinador": "Ash",
+    "nivel": 1
+  },
+  {
+    "id": 2,
+    "tipo": "charizard",
+    "treinador": "Red",
+    "nivel": 5
+  }
+]
+```
+
+#### Batalhar
+
+```bash
+curl -X POST http://localhost:3000/batalhar/1/2
+```
+
+**Resposta (200):**
+```json
+{
+  "vencedor": {
+    "id": 2,
+    "tipo": "charizard",
+    "treinador": "Red",
+    "nivel": 6
+  },
+  "perdedor": {
+    "id": 1,
+    "tipo": "pikachu",
+    "treinador": "Ash",
+    "nivel": 0
+  }
+}
+```
+
+## 🧪 Testes
+
+### Executar Testes
+
+```bash
+# Com Docker
+make test             # Testes unitários
+make test-cov         # Com coverage
+make test-e2e         # Testes E2E
+
+# Local
+yarn test             # Testes unitários
+yarn test:cov         # Com coverage
+yarn test:e2e         # Testes E2E
+yarn test:all         # Todos os testes
+```
+
+### Coverage
+
+```bash
+yarn test:cov
+```
+
+Target: **>80% de coverage**
+
+### Estrutura de Testes
+
+```
+test/
+├── pokemon.e2e-spec.ts    # Testes E2E de pokémons
+└── battle.e2e-spec.ts     # Testes E2E de batalhas
+
+src/
+├── pokemon/
+│   ├── pokemon.service.spec.ts     # Unit tests
+│   └── pokemon.controller.spec.ts  # Unit tests
+└── battle/
+    ├── battle.service.spec.ts      # Unit tests
+    └── battle.controller.spec.ts   # Unit tests
+```
+
+## 🐳 Docker
+
+### Quick Start
+
+```bash
+# Desenvolvimento
+make dev
+
+# Produção
+make prod
+
+# Com PgAdmin
+docker compose --profile dev --profile tools up -d
+```
+
+### Comandos Úteis
+
+```bash
+make help             # Lista todos os comandos
+make logs             # Ver logs
+make shell            # Acessa shell do container
+make db               # Inicia apenas PostgreSQL
+make pgadmin          # Inicia PgAdmin
+make clean            # Limpa tudo
+```
+
+### PgAdmin
+
+Se iniciado com profile `tools`:
+
+- **URL:** http://localhost:5050
+- **Email:** admin@pokearena.com
+- **Senha:** admin
+
+**Configurar conexão:**
+- Host: `postgres`
+- Port: `5432`
+- Database: `pokearena_db`
+- Username: `postgres`
+- Password: `postgres`
+
+Para mais detalhes, veja [docker/README.md](./docker/README.md)
+
+## 🚀 Deploy
+
+### Preparação
+
+1. Configure as variáveis de ambiente de produção
+2. Configure secrets no GitHub (se usar CD)
+3. Escolha a plataforma de deploy
+
+### Plataformas Suportadas
+
+#### Railway
+
+```bash
+# 1. Instale CLI
+npm i -g @railway/cli
+
+# 2. Login
+railway login
+
+# 3. Deploy
+railway up
+```
+
+#### Render
+
+1. Conecte repositório no [Render](https://render.com)
+2. Configure serviço Web
+3. Adicione PostgreSQL database
+4. Deploy automático
+
+#### Docker Hub
+
+```bash
+# Build
+docker build -t seu-usuario/pokearena:latest .
+
+# Push
+docker push seu-usuario/pokearena:latest
+```
+
+Para habilitar deploy automático via GitHub Actions, veja [.github/workflows/README.md](.github/workflows/README.md)
+
+## 📁 Estrutura do Projeto
+
+```
+poke-arena-back/
+├── src/
+│   ├── common/              # Código compartilhado
+│   │   ├── entities/        # BaseEntity abstrata
+│   │   ├── filters/         # Exception filters
+│   │   ├── interceptors/    # Interceptors
+│   │   └── pipes/           # Validation pipes
+│   │
+│   ├── config/              # Configurações
+│   │   ├── app.config.ts
+│   │   ├── database.config.ts
+│   │   └── swagger.config.ts
+│   │
+│   ├── pokemon/             # Módulo Pokemon
+│   │   ├── entities/
+│   │   ├── dto/
+│   │   ├── enums/
+│   │   ├── pokemon.controller.ts
+│   │   ├── pokemon.service.ts
+│   │   └── pokemon.module.ts
+│   │
+│   ├── battle/              # Módulo Battle
+│   │   ├── dto/
+│   │   ├── battle.controller.ts
+│   │   ├── battle.service.ts
+│   │   └── battle.module.ts
+│   │
+│   ├── health/              # Health checks
+│   │   ├── health.controller.ts
+│   │   └── health.module.ts
+│   │
+│   ├── app.module.ts        # Módulo raiz
+│   └── main.ts              # Bootstrap
+│
+├── test/                    # Testes E2E
+├── database/                # Migrations
+├── .github/                 # CI/CD workflows
+├── .husky/                  # Git hooks
+├── docker/                  # Docker configs
+├── Dockerfile               # Imagem produção
+├── Dockerfile.dev           # Imagem desenvolvimento
+├── docker-compose.yml       # Orquestração
+└── Makefile                 # Comandos facilitadores
+```
+
+## 🤝 Contribuindo
+
+Contribuições são bem-vindas! Siga os passos:
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'feat: adiciona AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+### Convenção de Commits
+
+Seguimos [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` Nova feature
+- `fix:` Correção de bug
+- `docs:` Documentação
+- `style:` Formatação
+- `refactor:` Refatoração
+- `test:` Testes
+- `chore:` Manutenção
+
+### Workflow
+
+1. **Pre-commit:** ESLint + Prettier (automático)
+2. **Pre-push:** Build + Tests (automático)
+3. **CI Pipeline:** Lint, Tests, E2E, Build (GitHub Actions)
+4. **Code Review:** Pelo menos 1 aprovação
+5. **CD Pipeline:** Deploy automático após merge
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 👥 Autores
+
+- **Yuri Mancini** - *Desenvolvimento inicial*
+
+## 🙏 Agradecimentos
+
+- [Jazida](https://jazida.com.br/) - Pelo desafio técnico
+- [NestJS](https://nestjs.com/) - Framework incrível
+- [TypeORM](https://typeorm.io/) - ORM poderoso
+- [PostgreSQL](https://www.postgresql.org/) - Database robusto
+
+---
+
+<div align="center">
+
+**[⬆ Voltar ao topo](#-pokéarena-api)**
+
+Desenvolvido com ❤️ para o Desafio Jazida
+
+</div>

@@ -1,0 +1,32 @@
+# ================================
+# Dockerfile de Desenvolvimento
+# Com hot-reload e debugging
+# ================================
+FROM node:24-alpine
+
+WORKDIR /app
+
+# Instala dependências do sistema
+RUN apk add --no-cache \
+    libc6-compat \
+    python3 \
+    make \
+    g++
+
+# Copia arquivos de dependências
+COPY package.json yarn.lock ./
+
+# Instala todas as dependências (incluindo dev)
+RUN yarn install --frozen-lockfile
+
+# Copia código fonte
+COPY . .
+
+# Expõe porta da aplicação
+EXPOSE 3000
+
+# Expõe porta de debug
+EXPOSE 9229
+
+# Comando de desenvolvimento com hot-reload
+CMD ["yarn", "start:dev"]
