@@ -14,11 +14,8 @@ export class CreatePokemonDto {
     enum: PokemonType,
     example: PokemonType.PIKACHU,
   })
-  @IsEnum({
-    enum: PokemonType,
-    message: `Tipo inválido. Valores permitidos: ${Object.values(
-      PokemonType,
-    ).join(', ')}`,
+  @IsEnum(PokemonType, {
+    message: `Tipo inválido. Valores permitidos: ${Object.values(PokemonType).join(', ')}`,
   })
   tipo: PokemonType;
 

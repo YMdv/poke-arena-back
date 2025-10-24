@@ -1,14 +1,9 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pokemon } from './entities/pokemon.entity';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
-import { PokemonType } from './enums/pokemon-type.enum';
 
 /**
  * PokemonService
@@ -28,17 +23,9 @@ export class PokemonService {
    * Valida o tipo e inicia com nível 1
    */
   async create(createPokemonDto: CreatePokemonDto): Promise<Pokemon> {
-    // Valida tipo do pokémon
-    const validTypes = Object.values(PokemonType);
-    if (!validTypes.includes(createPokemonDto.tipo)) {
-      throw new BadRequestException(
-        `Tipo inválido. Valores permitidos: ${validTypes.join(', ')}`,
-      );
-    }
-
     const pokemon = this.pokemonRepository.create({
       ...createPokemonDto,
-      nivel: 1, // Todo pokémon inicia com nível 1
+      nivel: 1,
       active: true,
     });
 
