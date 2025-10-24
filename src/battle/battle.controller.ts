@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Param,
-  HttpCode,
-  HttpStatus,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Post, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { BattleService } from './battle.service';
 import { BattleResultDto } from './dto/battle-result.dto';
@@ -51,8 +44,8 @@ export class BattleController {
     description: 'Um ou ambos pokémons não encontrados',
   })
   async battle(
-    @Param('pokemonAId', ParseIntPipe) pokemonAId: number,
-    @Param('pokemonBId', ParseIntPipe) pokemonBId: number,
+    @Param('pokemonAId') pokemonAId: string,
+    @Param('pokemonBId') pokemonBId: string,
   ): Promise<BattleResultDto> {
     return await this.battleService.battle(pokemonAId, pokemonBId);
   }
