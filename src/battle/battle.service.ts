@@ -29,8 +29,8 @@ export class BattleService {
    * @returns Resultado da batalha com vencedor e perdedor
    */
   async battle(
-    pokemonAId: number,
-    pokemonBId: number,
+    pokemonAId: string,
+    pokemonBId: string,
   ): Promise<BattleResultDto> {
     // Validação: pokémon não pode batalhar consigo mesmo
     if (pokemonAId === pokemonBId) {

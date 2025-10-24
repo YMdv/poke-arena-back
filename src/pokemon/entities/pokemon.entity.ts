@@ -16,15 +16,20 @@ import { PokemonType } from '../enums/pokemon-type.enum';
 @Entity('pokemon')
 export class Pokemon extends BaseEntity {
   @Column({
-    type: 'varchar',
-    length: 50,
+    type: 'enum',
     enum: PokemonType,
   })
   tipo: PokemonType;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({
+    type: 'varchar',
+    length: 255,
+  })
   treinador: string;
 
-  @Column({ type: 'int', default: 1 })
+  @Column({
+    type: 'int',
+    default: 1,
+  })
   nivel: number;
 }

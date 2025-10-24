@@ -8,7 +8,6 @@ import {
   Param,
   HttpCode,
   HttpStatus,
-  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -89,9 +88,7 @@ export class PokemonController {
     status: 404,
     description: 'Pokémon não encontrado',
   })
-  async findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<PokemonResponseDto> {
+  async findOne(@Param('id') id: string): Promise<PokemonResponseDto> {
     return await this.pokemonService.findOne(id);
   }
 
@@ -113,7 +110,7 @@ export class PokemonController {
     description: 'Pokémon não encontrado',
   })
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() updatePokemonDto: UpdatePokemonDto,
   ): Promise<void> {
     await this.pokemonService.update(id, updatePokemonDto);
@@ -135,7 +132,7 @@ export class PokemonController {
     status: 404,
     description: 'Pokémon não encontrado',
   })
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async remove(@Param('id') id: string): Promise<void> {
     await this.pokemonService.remove(id);
   }
 }

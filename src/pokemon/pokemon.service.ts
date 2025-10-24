@@ -59,7 +59,7 @@ export class PokemonService {
    * Busca um pokémon por ID
    * Retorna apenas se estiver ativo
    */
-  async findOne(id: number): Promise<Pokemon> {
+  async findOne(id: string): Promise<Pokemon> {
     const pokemon = await this.pokemonRepository.findOne({
       where: { id, active: true },
     });
@@ -75,7 +75,7 @@ export class PokemonService {
    * Busca um pokémon por ID sem filtrar por active
    * Usado internamente para batalhas
    */
-  async findOneInternal(id: number): Promise<Pokemon> {
+  async findOneInternal(id: string): Promise<Pokemon> {
     const pokemon = await this.pokemonRepository.findOne({
       where: { id },
     });
@@ -93,7 +93,7 @@ export class PokemonService {
    * Atualiza o treinador de um pokémon
    * Apenas o campo 'treinador' pode ser alterado
    */
-  async update(id: number, updatePokemonDto: UpdatePokemonDto): Promise<void> {
+  async update(id: string, updatePokemonDto: UpdatePokemonDto): Promise<void> {
     const pokemon = await this.findOne(id);
 
     pokemon.treinador = updatePokemonDto.treinador;
@@ -105,7 +105,7 @@ export class PokemonService {
    * Remove um pokémon (soft delete)
    * Define active = false mantendo o registro no banco
    */
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     const pokemon = await this.findOne(id);
 
     pokemon.active = false;
