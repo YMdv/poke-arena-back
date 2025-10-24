@@ -78,7 +78,7 @@ export class PokemonController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Buscar pokémon por ID' })
-  @ApiParam({ name: 'id', description: 'ID do pokémon', type: Number })
+  @ApiParam({ name: 'id', description: 'ID do pokémon', type: String })
   @ApiResponse({
     status: 200,
     description: 'Pokémon encontrado',
@@ -99,7 +99,7 @@ export class PokemonController {
   @Put(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Atualizar treinador do pokémon' })
-  @ApiParam({ name: 'id', description: 'ID do pokémon', type: Number })
+  @ApiParam({ name: 'id', description: 'ID do pokémon', type: String })
   @ApiBody({ type: UpdatePokemonDto })
   @ApiResponse({
     status: 204,
@@ -123,7 +123,7 @@ export class PokemonController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Deletar pokémon' })
-  @ApiParam({ name: 'id', description: 'ID do pokémon', type: Number })
+  @ApiParam({ name: 'id', description: 'ID do pokémon', type: String })
   @ApiResponse({
     status: 204,
     description: 'Pokémon deletado com sucesso',
