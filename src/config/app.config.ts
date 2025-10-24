@@ -13,7 +13,9 @@ export const appConfig = () => ({
   // Swagger
   swagger: {
     title: process.env.SWAGGER_TITLE || 'PokéArena API',
-    description: process.env.SWAGGER_DESCRIPTION || 'API para gerenciamento de pokémons e batalhas',
+    description:
+      process.env.SWAGGER_DESCRIPTION ||
+      'API para gerenciamento de pokémons e batalhas',
     version: process.env.SWAGGER_VERSION || '1.0.0',
   },
 
