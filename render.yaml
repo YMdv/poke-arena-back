@@ -1,12 +1,4 @@
 services:
-  # PostgreSQL Database
-  - type: pserv
-    name: pokearena-db
-    env: docker
-    plan: free
-    region: oregon
-    ipAllowList: []
-
   # NestJS API
   - type: web
     name: pokearena-api
@@ -51,6 +43,5 @@ services:
 databases:
   - name: pokearena-db
     databaseName: pokearena_db
-    user: postgres
     plan: free
     region: oregon
