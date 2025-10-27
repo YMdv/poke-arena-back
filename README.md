@@ -2,16 +2,16 @@
 
 > API RESTful para gerenciamento de pokémons e sistema de batalhas probabilístico
 
-[![CI Pipeline](https://github.com/SEU_USUARIO/poke-arena-back/workflows/CI%20Pipeline/badge.svg)](https://github.com/SEU_USUARIO/poke-arena-back/actions)
-[![CD Pipeline](https://github.com/SEU_USUARIO/poke-arena-back/workflows/CD%20Pipeline/badge.svg)](https://github.com/SEU_USUARIO/poke-arena-back/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![NestJS](https://img.shields.io/badge/NestJS-11.x-red.svg)](https://nestjs.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-24.x-green.svg)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 📋 Índice
 
 - [Sobre](#sobre)
+- [Frontend](#frontend)
 - [Features](#features)
 - [Tecnologias](#tecnologias)
 - [Pré-requisitos](#pré-requisitos)
@@ -27,26 +27,15 @@
 
 ## 🎯 Sobre
 
-PokéArena é uma API completa para gerenciamento de pokémons com sistema de batalhas baseado em probabilidade. O projeto implementa operações CRUD, sistema de batalhas com algoritmo probabilístico proporcional aos níveis dos pokémons, e todas as melhores práticas de desenvolvimento moderno.
+PokéArena é uma API completa para gerenciamento de pokémons com sistema de batalhas baseado em probabilidade. O projeto implementa operações CRUD completas, sistema de batalhas com algoritmo probabilístico proporcional aos níveis dos pokémons, e todas as melhores práticas de desenvolvimento moderno.
 
-### Desafio Jazida
+## 🎨 Frontend
 
-Este projeto foi desenvolvido como resposta ao [Desafio Backend Jazida](./Desafio%20Jazida%20-%20Pokémon.md), implementando todas as funcionalidades obrigatórias e opcionais:
+A interface web do PokéArena está disponível em um repositório separado:
 
-**Funcionalidades Obrigatórias (10 pontos):**
-- ✅ CRUD completo de pokémons (7 pontos)
-- ✅ Sistema de batalhas probabilístico (3 pontos)
-
-**Funcionalidades Opcionais (+15 pontos):**
-- ✅ Deploy online (+1 ponto)
-- ✅ Testes unitários (+1 ponto)
-- ✅ Testes de integração (+2 pontos)
-- ✅ Observabilidade (+2 pontos)
-- ✅ Documentação automática da API (+3 pontos)
-- ✅ CI/CD (+3 pontos)
-- ⚠️ Interface web (+3 pontos) - Planejado para frontend separado
-
-**Pontuação Total: 22/25 pontos**
+- **Repositório:** [poke-arena-front](https://github.com/SEU_USUARIO/poke-arena-front)
+- **Tecnologias:** React 18 + Vite + TypeScript + Chakra UI
+- **Features:** Interface completa para CRUD de pokémons e sistema de batalhas
 
 ## ✨ Features
 
@@ -138,7 +127,33 @@ Escolha uma das opções:
 
 ## 🚀 Instalação
 
-### Com Docker (Recomendado)
+### Opção 1: Docker - Apenas Banco de Dados (Recomendado)
+
+Ideal para desenvolvimento local com hot-reload rápido:
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/SEU_USUARIO/poke-arena-back.git
+cd poke-arena-back
+
+# 2. Instale as dependências
+yarn install
+
+# 3. Configure o ambiente
+cp .env.example .env
+
+# 4. Suba apenas o PostgreSQL
+docker compose up -d
+
+# 5. Inicie a API localmente
+yarn start:dev
+```
+
+**Pronto!** A API estará rodando em http://localhost:3000
+
+### Opção 2: Docker Completo
+
+Para rodar tudo containerizado (PostgreSQL + API):
 
 ```bash
 # 1. Clone o repositório
@@ -154,7 +169,9 @@ docker compose --profile dev up -d
 
 **Pronto!** A API estará rodando em http://localhost:3000
 
-### Local (Sem Docker)
+### Opção 3: Sem Docker
+
+Requer PostgreSQL instalado localmente:
 
 ```bash
 # 1. Clone o repositório
@@ -166,7 +183,7 @@ yarn install
 
 # 3. Configure o ambiente
 cp .env.example .env
-# Edite o .env com suas configurações
+# Edite o .env com suas configurações do PostgreSQL
 
 # 4. Certifique-se que o PostgreSQL está rodando
 # Crie o banco de dados:
@@ -179,53 +196,42 @@ yarn migration:run
 yarn start:dev
 ```
 
+**Pronto!** A API estará rodando em http://localhost:3000
+
 ## 💻 Uso
 
-### Desenvolvimento Local (Recomendado)
+### Scripts Úteis
 
 ```bash
-# 1. Subir PostgreSQL
-yarn db:up
+# Desenvolvimento
+yarn start:dev          # Inicia API em modo dev (hot-reload)
+yarn db:up             # Sobe apenas PostgreSQL (Docker)
+yarn db:down           # Para PostgreSQL
 
-# 2. Rodar aplicação
-yarn start:dev
+# Produção
+yarn build             # Build da aplicação
+yarn start:prod        # Inicia API em modo produção
 
-# 3. Ver logs do PostgreSQL (opcional)
-docker-compose logs -f postgres
+# Qualidade
+yarn lint              # Roda ESLint
+yarn format            # Formata código com Prettier
+yarn test              # Testes unitários
+yarn test:e2e          # Testes E2E
+yarn test:cov          # Coverage
 
-# 4. Parar PostgreSQL (quando terminar)
-yarn db:down
+# Database
+yarn migration:create  # Criar nova migration
+yarn migration:run     # Executar migrations
+yarn migration:revert  # Reverter última migration
 ```
 
-### Desenvolvimento com Docker Completo
-
-```bash
-# Subir tudo (PostgreSQL + API)
-docker-compose --profile dev up -d
-
-# Ver logs
-docker-compose logs -f
-
-# Parar
-docker-compose down
-```
-
-### Produção
-
-```bash
-# Local
-yarn build
-yarn start:prod
-
-# Docker
-docker-compose --profile prod up -d
-```
-
-### Acessar Aplicação
+### URLs da Aplicação
 
 - **API Base:** http://localhost:3000
 - **Swagger UI:** http://localhost:3000/api-docs
 - **Health Check:** http://localhost:3000/health
+- **Health Database:** http://localhost:3000/health/db
+- **Health Memory:** http://localhost:3000/health/memory
 
 ## 📚 API Documentation
 
@@ -397,21 +403,46 @@ src/
 
 ## 🐳 Docker
 
+O projeto usa Docker Compose com **profiles** para diferentes ambientes:
+
+### Profiles Disponíveis
+
+1. **Sem profile:** Apenas PostgreSQL (banco de dados isolado)
+2. **`--profile dev`:** PostgreSQL + API em modo desenvolvimento (hot-reload)
+3. **`--profile prod`:** PostgreSQL + API em modo produção (otimizado)
+4. **`--profile tools`:** Adiciona PgAdmin (interface gráfica para PostgreSQL)
+
 ### Quick Start
 
 ```bash
-# Desenvolvimento (PostgreSQL + API)
+# Apenas banco de dados (para desenvolvimento local da API)
+docker compose up -d
+
+# Desenvolvimento completo (PostgreSQL + API)
 docker compose --profile dev up -d
 
 # Produção
 docker compose --profile prod up -d
 
-# Com PgAdmin
+# Desenvolvimento com PgAdmin
 docker compose --profile dev --profile tools up -d
 
 # Parar tudo
 docker compose down
 ```
+
+### Recomendação de Uso
+
+**Desenvolvimento local (recomendado):**
+```bash
+# 1. Subir apenas PostgreSQL
+docker compose up -d
+
+# 2. Rodar API localmente (em outro terminal)
+yarn start:dev
+```
+
+Essa abordagem oferece melhor performance e experiência de desenvolvimento.
 
 ### Comandos Úteis
 
@@ -593,16 +624,15 @@ git commit -m "docs: update README"
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## 👥 Autores
+## 👥 Autor
 
-- **Yuri Mancini** - *Desenvolvimento inicial*
+- **Yuri Mancini** - Desenvolvimento
 
 ## 🙏 Agradecimentos
 
-- [Jazida](https://jazida.com.br/) - Pelo desafio técnico
-- [NestJS](https://nestjs.com/) - Framework incrível
-- [TypeORM](https://typeorm.io/) - ORM poderoso
-- [PostgreSQL](https://www.postgresql.org/) - Database robusto
+- [NestJS](https://nestjs.com/) - Framework backend progressivo
+- [TypeORM](https://typeorm.io/) - ORM poderoso e flexível
+- [PostgreSQL](https://www.postgresql.org/) - Banco de dados robusto e confiável
 
 ---
 
@@ -610,6 +640,6 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 **[⬆ Voltar ao topo](#-pokéarena-api)**
 
-Desenvolvido com ❤️ para o Desafio Jazida
+Desenvolvido com ❤️ usando TypeScript, NestJS e PostgreSQL
 
 </div>
