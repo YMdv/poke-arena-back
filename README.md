@@ -535,23 +535,43 @@ Contribuições são bem-vindas! Siga os passos:
 
 ### Convenção de Commits
 
-Seguimos [Conventional Commits](https://www.conventionalcommits.org/):
+Seguimos [Conventional Commits](https://www.conventionalcommits.org/) (validado automaticamente):
 
-- `feat:` Nova feature
-- `fix:` Correção de bug
-- `docs:` Documentação
-- `style:` Formatação
-- `refactor:` Refatoração
-- `test:` Testes
-- `chore:` Manutenção
+**Formato obrigatório:**
+```
+<type>[optional scope]: <description>
+```
+
+**Tipos válidos:**
+- `feat` - Nova funcionalidade
+- `fix` - Correção de bug
+- `docs` - Documentação
+- `style` - Formatação de código
+- `refactor` - Refatoração
+- `perf` - Melhoria de performance
+- `test` - Testes
+- `build` - Build/dependências
+- `ci` - CI/CD
+- `chore` - Manutenção
+- `revert` - Reverter commit
+
+**Exemplos:**
+```bash
+git commit -m "feat: add pokemon battle system"
+git commit -m "fix(api): resolve endpoint error"
+git commit -m "docs: update README"
+```
 
 ### Workflow
 
-1. **Pre-commit:** ESLint + Prettier (automático)
-2. **Pre-push:** Build + Tests (automático)
-3. **CI Pipeline:** Lint, Tests, E2E, Build (GitHub Actions)
-4. **Code Review:** Pelo menos 1 aprovação
-5. **CD Pipeline:** Deploy automático após merge
+1. **Pre-commit:** ESLint + Prettier nos arquivos staged
+2. **Commit-msg:** Valida formato Conventional Commits
+3. **Pre-push:** Build + Testes unitários
+4. **CI Pipeline:** Lint, Tests, E2E, Build (GitHub Actions)
+5. **Code Review:** Pelo menos 1 aprovação
+6. **CD Pipeline:** Deploy automático após merge
+
+> 💡 Os hooks do Husky garantem qualidade antes do código chegar ao repositório remoto. Veja [.husky/README.md](.husky/README.md) para mais detalhes.
 
 ## 📄 Licença
 

@@ -1,61 +1,59 @@
 # Husky Git Hooks
 
-Este projeto utiliza Husky para garantir qualidade de código antes dos commits e pushes.
+Hooks configurados para garantir qualidade de código e padronização de commits.
 
-## Hooks Configurados
+## Hooks Ativos
 
-### Pre-commit
-
-Executado automaticamente antes de cada commit.
-
+### 1. `pre-commit`
+**Quando:** Antes de criar o commit
 **Ações:**
-- ✅ ESLint (corrige automaticamente)
-- ✅ Prettier (formata código automaticamente)
-- ✅ Valida apenas arquivos staged (modificados)
+- Lint com ESLint (auto-fix)
+- Formatação com Prettier
+- Valida apenas arquivos staged
 
-**Como funciona:**
-```bash
-git add .
-git commit -m "mensagem"  # Pre-commit hook é executado automaticamente
+### 2. `commit-msg`
+**Quando:** Ao escrever a mensagem de commit
+**Ações:**
+- Valida formato [Conventional Commits](https://www.conventionalcommits.org/)
+- Bloqueia commits com mensagens inválidas
+
+**Formato obrigatório:**
+```
+<type>[optional scope]: <description>
 ```
 
-### Pre-push
+**Tipos válidos:**
+- `feat` - Nova funcionalidade
+- `fix` - Correção de bug
+- `docs` - Documentação
+- `style` - Formatação de código
+- `refactor` - Refatoração
+- `perf` - Melhoria de performance
+- `test` - Testes
+- `build` - Build/dependências
+- `ci` - CI/CD
+- `chore` - Manutenção
+- `revert` - Reverter commit
 
-Executado automaticamente antes de cada push.
-
-**Ações:**
-- ✅ Build do projeto (garante que compila sem erros)
-- ✅ Testes unitários (garante que os testes passam)
-
-**Como funciona:**
+**Exemplos válidos:**
 ```bash
-git push  # Pre-push hook é executado automaticamente
+git commit -m "feat: add pokemon battle system"
+git commit -m "fix(api): resolve endpoint error"
+git commit -m "docs: update README"
 ```
+
+### 3. `pre-push`
+**Quando:** Antes de fazer push
+**Ações:**
+- Build do projeto
+- Testes unitários
 
 ## Bypass (Emergências)
 
-Em casos emergenciais, você pode pular os hooks:
-
 ```bash
-# Pular pre-commit
-git commit -m "mensagem" --no-verify
-
-# Pular pre-push
+# Pular hooks
+git commit --no-verify
 git push --no-verify
 ```
 
-⚠️ **Use com moderação!** Os hooks existem para manter a qualidade do código.
-
-## Desabilitar Husky
-
-Para desabilitar temporariamente:
-
-```bash
-export HUSKY=0
-```
-
-Para habilitar novamente:
-
-```bash
-unset HUSKY
-```
+⚠️ Use apenas em emergências!
