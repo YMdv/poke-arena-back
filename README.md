@@ -367,16 +367,32 @@ Target: **>80% de coverage**
 
 ```
 test/
-├── pokemon.e2e-spec.ts    # Testes E2E de pokémons
-└── battle.e2e-spec.ts     # Testes E2E de batalhas
+└── e2e/                            # Testes E2E com Pactum
+    ├── config/
+    │   └── jest-pactum.config.js
+    ├── setup/
+    │   ├── global-setup.ts
+    │   └── global-teardown.ts
+    ├── helpers/
+    │   ├── pactum-config.ts
+    │   ├── assertions.ts
+    │   └── stores.ts
+    ├── fixtures/
+    │   ├── pokemon.fixtures.ts
+    │   └── battle.fixtures.ts
+    └── specs/
+        ├── pokemon.pactum.e2e-spec.ts   # Testes E2E de pokémons
+        └── battle.pactum.e2e-spec.ts    # Testes E2E de batalhas
 
 src/
 ├── pokemon/
-│   ├── pokemon.service.spec.ts     # Unit tests
-│   └── pokemon.controller.spec.ts  # Unit tests
+│   └── __tests__/
+│       ├── pokemon.service.spec.ts     # Unit tests
+│       └── pokemon.controller.spec.ts  # Unit tests
 └── battle/
-    ├── battle.service.spec.ts      # Unit tests
-    └── battle.controller.spec.ts   # Unit tests
+    └── __tests__/
+        ├── battle.service.spec.ts      # Unit tests
+        └── battle.controller.spec.ts   # Unit tests
 ```
 
 ## 🐳 Docker

@@ -54,8 +54,13 @@ export class BattleService {
     // Prepara resultado
     // Se perdedor chegou a nível 0, updatedLoser será null
     const loserResult = updatedLoser || {
-      ...loser,
+      id: loser.id,
+      tipo: loser.tipo,
+      treinador: loser.treinador,
       nivel: 0,
+      active: loser.active,
+      created_at: loser.created_at,
+      updated_at: loser.updated_at,
     };
 
     return {
