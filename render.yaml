@@ -1,0 +1,56 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: pokearena-db
+    env: docker
+    plan: free
+    region: oregon
+    ipAllowList: []
+
+  # NestJS API
+  - type: web
+    name: pokearena-api
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: yarn install && yarn build
+    startCommand: yarn start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: pokearena-db
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: pokearena-db
+          property: port
+      - key: DATABASE_USER
+        fromDatabase:
+          name: pokearena-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: pokearena-db
+          property: password
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: pokearena-db
+          property: database
+      - key: DATABASE_SYNC
+        value: false
+      - key: DATABASE_LOGGING
+        value: false
+      - key: LOG_LEVEL
+        value: info
+
+databases:
+  - name: pokearena-db
+    databaseName: pokearena_db
+    user: postgres
+    plan: free
+    region: oregon
