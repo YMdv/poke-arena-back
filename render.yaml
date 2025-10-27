@@ -5,8 +5,9 @@ services:
     env: node
     plan: free
     region: oregon
+    rootDir: .
     buildCommand: yarn install --production=false && yarn build
-    startCommand: yarn start:prod
+    startCommand: node dist/main.js
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV

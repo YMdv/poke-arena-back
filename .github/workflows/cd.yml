@@ -58,12 +58,12 @@ jobs:
       #     railway_token: ${{ secrets.RAILWAY_TOKEN }}
       #     service: pokearena-api
 
-      # Deploy para Render (exemplo)
-      # - name: Deploy to Render
-      #   uses: johnbeynon/render-deploy-action@v0.0.8
-      #   with:
-      #     service-id: ${{ secrets.RENDER_SERVICE_ID }}
-      #     api-key: ${{ secrets.RENDER_API_KEY }}
+      # Deploy para Render
+      - name: Deploy to Render
+        if: github.ref == 'refs/heads/main'
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+        continue-on-error: false
 
       # Deploy para Vercel (exemplo)
       # - name: Deploy to Vercel
