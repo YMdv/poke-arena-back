@@ -1,0 +1,210 @@
+# =========================================
+# 🎮 PokéArena API - Render Deploy Config
+# =========================================
+#
+# Este arquivo configura automaticamente todos os recursos necessários na Render.
+# A Render detecta este arquivo na raiz do repositório e cria:
+#   - Web Service (Backend NestJS)
+#   - PostgreSQL Database
+#   - Variáveis de ambiente conectadas automaticamente
+#
+# Como usar:
+#   1. Faça commit deste arquivo: git add render.yaml && git commit -m "Add Render config"
+#   2. Push para o GitHub: git push origin main
+#   3. Na Render: Dashboard → New → Blueprint → Conectar repositório
+#   4. Render detecta o render.yaml automaticamente e cria tudo com um clique!
+#
+# Documentação: https://render.com/docs/infrastructure-as-code
+# =========================================
+
+services:
+  # =========================================
+  # 🚀 Web Service (Backend API)
+  # =========================================
+  - type: web
+    name: poke-arena-back
+    runtime: node
+    region: oregon  # us-west (mais barato) - alternativas: ohio (us-east), frankfurt (eu-central)
+    plan: free  # Planos disponíveis: free, starter, standard, pro
+
+    # Root Directory: RAIZ do projeto (não src/)
+    # Isso resolve o erro: "Cannot find module '/opt/render/project/src/dist/main.js'"
+    rootDir: .
+
+    # Branch principal para auto-deploy
+    branch: main
+
+    # Build Command: instala dependências e compila TypeScript
+    buildCommand: yarn install && yarn build
+
+    # Start Command: roda migrations ANTES de iniciar a aplicação
+    # Garante que o banco está sempre atualizado antes do app iniciar
+    startCommand: yarn start:prod:migrate
+
+    # Health Check: endpoint que a Render monitora continuamente
+    # Se falhar, reinicia automaticamente o serviço
+    healthCheckPath: /health
+
+    # Auto-deploy: deploy automático quando há push na branch principal
+    autoDeploy: true
+
+    # =========================================
+    # 🔧 Variáveis de Ambiente
+    # =========================================
+    envVars:
+      # ---------------------------------------
+      # Configurações da Aplicação
+      # ---------------------------------------
+
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: 3000
+
+      - key: API_PREFIX
+        value: ""  # Vazio por padrão - pode configurar como "/api" se necessário
+
+      # ---------------------------------------
+      # Configurações do Banco de Dados
+      # ---------------------------------------
+      # A Render injeta automaticamente as credenciais do PostgreSQL criado abaixo
+      # usando a sintaxe "fromDatabase". Isso significa:
+      #   ✅ Zero hardcode de senhas
+      #   ✅ Conexão segura automática
+      #   ✅ Credenciais gerenciadas pela Render
+
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: pokearena-db
+          property: host
+
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: pokearena-db
+          property: port
+
+      - key: DATABASE_USER
+        fromDatabase:
+          name: pokearena-db
+          property: user
+
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: pokearena-db
+          property: password
+
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: pokearena-db
+          property: database
+
+      # IMPORTANTE: DATABASE_SYNC deve ser FALSE em produção!
+      # Use migrations (TypeORM) para gerenciar schema do banco
+      - key: DATABASE_SYNC
+        value: false
+
+      # DATABASE_LOGGING: false em produção para melhor performance
+      # Ative (true) apenas para debugging
+      - key: DATABASE_LOGGING
+        value: false
+
+      # ---------------------------------------
+      # Configurações de Logging
+      # ---------------------------------------
+
+      - key: LOG_LEVEL
+        value: info  # Níveis: debug, info, warn, error
+
+      - key: LOG_FORMAT
+        value: json  # Formato estruturado para análise de logs
+
+      # ---------------------------------------
+      # Configurações do Swagger
+      # ---------------------------------------
+
+      - key: SWAGGER_TITLE
+        value: PokéArena API
+
+      - key: SWAGGER_DESCRIPTION
+        value: API para gerenciamento de pokémons e batalhas
+
+      - key: SWAGGER_VERSION
+        value: 1.0.0
+
+# =========================================
+# 🗄️ PostgreSQL Database
+# =========================================
+databases:
+  - name: pokearena-db
+    databaseName: pokearena_db
+    plan: free  # Planos: free (256MB), starter (1GB), standard (10GB), pro (50GB)
+    region: oregon  # Mesma região do web service para menor latência
+
+    # A Render cria automaticamente:
+    #   - Database com nome "pokearena_db"
+    #   - Usuário com permissões completas
+    #   - Senha segura gerada automaticamente
+    #   - Todas as credenciais são injetadas no web service via "fromDatabase"
+
+# =========================================
+# 📝 Notas Importantes
+# =========================================
+#
+# 1. PRIMEIRO DEPLOY:
+#    - As migrations rodarão automaticamente via "yarn start:prod:migrate"
+#    - Se houver erro nas migrations, o deploy falhará (comportamento esperado)
+#    - Verifique os logs: Dashboard → seu serviço → Logs
+#
+# 2. VARIÁVEIS ADICIONAIS (se necessário):
+#    - JWT_SECRET: adicione manualmente no Dashboard (Environment → Add Environment Variable)
+#    - API keys externas: adicione manualmente por segurança
+#    - Nunca commite secrets no render.yaml!
+#
+# 3. DOMÍNIO CUSTOMIZADO:
+#    - Por padrão: poke-arena-back.onrender.com
+#    - Para domínio próprio: Dashboard → Settings → Custom Domain
+#
+# 4. MONITORING:
+#    - Logs: Dashboard → seu serviço → Logs (live streaming)
+#    - Metrics: Dashboard → seu serviço → Metrics (CPU, memória, requests)
+#    - Alerts: Configure notificações em Dashboard → Notifications
+#
+# 5. SCALING:
+#    - Free plan: 1 instância (dorme após 15 min de inatividade)
+#    - Starter+: múltiplas instâncias, auto-scaling, zero downtime deploys
+#
+# 6. DATABASE BACKUPS:
+#    - Free plan: sem backups automáticos
+#    - Starter+: backups diários automáticos com retenção de 7 dias
+#    - Recomendação: faça backups manuais periódicos do free tier
+#
+# 7. TROUBLESHOOTING:
+#    - Erro "Cannot find module": verifique se rootDir está correto (deve ser ".")
+#    - Erro de conexão DB: verifique se o database foi criado antes do web service
+#    - App não inicia: verifique logs para erros de migration ou startup
+#
+# 8. CUSTOS:
+#    - Free tier: $0/mês (web service + database)
+#    - Limitações: dorme após inatividade, 750h/mês, sem SSL customizado
+#    - Starter: $7/mês (web) + $7/mês (db) = $14/mês total
+#
+# =========================================
+# 🚀 Deploy Flow
+# =========================================
+#
+# 1. git push origin main
+#    ↓
+# 2. Render detecta mudança
+#    ↓
+# 3. Build: yarn install && yarn build
+#    ↓
+# 4. Start: yarn start:prod:migrate
+#    ├── Roda migrations (yarn migration:run)
+#    └── Inicia app (node dist/main.js)
+#    ↓
+# 5. Health check: GET /health
+#    ↓
+# 6. Deploy completo! 🎉
+#
+# =========================================
