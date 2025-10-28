@@ -25,6 +25,7 @@ async function bootstrap() {
       'http://localhost:5174', // Vite dev server (porta alternativa)
       'http://localhost:3000', // React dev server
       'http://localhost:3001', // Porta alternativa
+      'https://poke-arena-front.onrender.com', // Frontend produção
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
