@@ -46,14 +46,22 @@ async function bootstrap() {
 
   await app.listen(port);
 
+  // Detecta ambiente e monta URLs corretas
+  const nodeEnv = configService.get<string>('nodeEnv');
+  const isProduction = nodeEnv === 'production';
+  const baseUrl = isProduction
+    ? 'https://poke-arena-back.onrender.com'
+    : `http://localhost:${port}`;
+
   console.log(`
     🚀 PokéArena API está rodando!
 
-    📍 URL: http://localhost:${port}
-    📚 Swagger: http://localhost:${port}/api-docs
-    💚 Health: http://localhost:${port}/health
+    📍 URL: ${baseUrl}
+    📚 Swagger: ${baseUrl}/api-docs
+    💚 Health: ${baseUrl}/health
 
-    Ambiente: ${configService.get<string>('nodeEnv')}
+    Ambiente: ${nodeEnv}
+    Porta: ${port}
   `);
 }
 
