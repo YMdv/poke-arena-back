@@ -6,18 +6,6 @@ import {
   Index,
 } from 'typeorm';
 
-/**
- * BaseEntity - Classe abstrata para entidades
- *
- * Contém campos comuns a todas as entidades do sistema:
- * - id: Identificador único
- * - created_at: Data de criação
- * - updated_at: Data da última atualização
- * - active: Flag para soft delete
- *
- * Todas as entidades do domínio devem estender esta classe
- * para garantir consistência e padronização.
- */
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Index({

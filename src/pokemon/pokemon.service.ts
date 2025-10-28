@@ -5,12 +5,6 @@ import { Pokemon } from './entities/pokemon.entity';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 
-/**
- * PokemonService
- *
- * Service responsável pela lógica de negócio relacionada a pokémons.
- * Implementa CRUD completo com soft delete e validações de negócio.
- */
 @Injectable()
 export class PokemonService {
   constructor(

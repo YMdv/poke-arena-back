@@ -21,21 +21,11 @@ import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { PokemonResponseDto } from './dto/pokemon-response.dto';
 
-/**
- * PokemonController
- *
- * Controller responsável pelos endpoints CRUD de pokémons.
- * Implementa as operações: CREATE, READ, UPDATE, DELETE
- */
 @ApiTags('pokemons')
 @Controller('pokemons')
 export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
 
-  /**
-   * POST /pokemons
-   * Cria um novo pokémon
-   */
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Criar um novo pokémon' })
@@ -55,10 +45,6 @@ export class PokemonController {
     return await this.pokemonService.create(createPokemonDto);
   }
 
-  /**
-   * GET /pokemons
-   * Lista todos os pokémons ativos
-   */
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Listar todos os pokémons' })
@@ -71,10 +57,6 @@ export class PokemonController {
     return await this.pokemonService.findAll();
   }
 
-  /**
-   * GET /pokemons/:id
-   * Busca um pokémon por ID
-   */
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Buscar pokémon por ID' })
@@ -92,10 +74,6 @@ export class PokemonController {
     return await this.pokemonService.findOne(id);
   }
 
-  /**
-   * PUT /pokemons/:id
-   * Atualiza o treinador de um pokémon
-   */
   @Put(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Atualizar treinador do pokémon' })
@@ -116,10 +94,6 @@ export class PokemonController {
     await this.pokemonService.update(id, updatePokemonDto);
   }
 
-  /**
-   * DELETE /pokemons/:id
-   * Remove um pokémon (soft delete)
-   */
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Deletar pokémon' })

@@ -2,21 +2,11 @@ import { Controller, Post, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { BattleService } from './battle.service';
 import { BattleResultDto } from './dto/battle-result.dto';
-
-/**
- * BattleController
- *
- * Controller responsável pelo endpoint de batalhas entre pokémons.
- */
 @ApiTags('batalhas')
 @Controller('batalhar')
 export class BattleController {
   constructor(private readonly battleService: BattleService) {}
 
-  /**
-   * POST /batalhar/:pokemonAId/:pokemonBId
-   * Realiza uma batalha entre dois pokémons
-   */
   @Post(':pokemonAId/:pokemonBId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Batalhar entre dois pokémons' })

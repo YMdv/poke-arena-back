@@ -4,15 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { setupSwagger } from './config/swagger.config';
 
-/**
- * Bootstrap da aplicação
- *
- * Configura:
- * - Validação global de DTOs
- * - Swagger/OpenAPI
- * - CORS
- * - Prefixo global da API (opcional)
- */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -21,11 +12,11 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
-      'http://localhost:5173', // Vite dev server
-      'http://localhost:5174', // Vite dev server (porta alternativa)
-      'http://localhost:3000', // React dev server
-      'http://localhost:3001', // Porta alternativa
-      'https://poke-arena-front.onrender.com', // Frontend produção
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'https://poke-arena-app.onrender.com', // Frontend produção
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,

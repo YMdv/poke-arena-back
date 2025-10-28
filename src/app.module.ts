@@ -7,15 +7,6 @@ import { PokemonModule } from './pokemon/pokemon.module';
 import { BattleModule } from './battle/battle.module';
 import { HealthModule } from './health/health.module';
 
-/**
- * AppModule
- *
- * Módulo raiz da aplicação.
- * Configura:
- * - ConfigModule: Gerenciamento de variáveis de ambiente
- * - TypeOrmModule: Conexão com PostgreSQL
- * - Módulos de domínio: Pokemon, Battle, Health
- */
 @Module({
   imports: [
     // Config Module - Carrega variáveis de ambiente
