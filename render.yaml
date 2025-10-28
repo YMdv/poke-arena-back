@@ -27,20 +27,19 @@ services:
     region: oregon  # us-west (mais barato) - alternativas: ohio (us-east), frankfurt (eu-central)
     plan: free  # Planos disponíveis: free, starter, standard, pro
 
-    # Root Directory: RAIZ do projeto (não src/)
-    # Isso resolve o erro: "Cannot find module '/opt/render/project/src/dist/main.js'"
-    rootDir: .
+    # Versão do Node.js (mesma do .nvmrc)
+    nodeVersion: "24.8.0"
 
     # Branch principal para auto-deploy
     branch: main
 
     # Build Command: instala dependências e compila TypeScript
-    # --production=false: instala devDependencies (necessário para @nestjs/cli)
+    # --production=false: instala devDependências (necessário para @nestjs/cli)
     buildCommand: yarn install --production=false && yarn build
 
     # Start Command: roda migrations ANTES de iniciar a aplicação
     # Garante que o banco está sempre atualizado antes do app iniciar
-    startCommand: yarn start:prod:migrate
+    startCommand: yarn migration:run && node /opt/render/project/dist/main.js
 
     # Health Check: endpoint que a Render monitora continuamente
     # Se falhar, reinicia automaticamente o serviço
