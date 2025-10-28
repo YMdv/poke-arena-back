@@ -8,8 +8,25 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+[![Deploy](https://img.shields.io/badge/Deploy-Online-success.svg)](https://poke-arena-back.onrender.com)
+[![Frontend](https://img.shields.io/badge/Frontend-Live-success.svg)](https://poke-arena-app.onrender.com)
+[![API Docs](https://img.shields.io/badge/API%20Docs-Swagger-brightgreen.svg)](https://poke-arena-back.onrender.com/api-docs)
+[![Tests](https://img.shields.io/badge/Tests-57%20passing-success.svg)]()
+[![Coverage](https://img.shields.io/badge/Coverage-100%25-success.svg)]()
+
+## 🚀 Aplicação Online
+
+A aplicação está disponível online e pode ser acessada diretamente:
+
+- **🎨 Frontend (Aplicação):** [https://poke-arena-app.onrender.com/](https://poke-arena-app.onrender.com/)
+- **📚 API (Documentação Swagger):** [https://poke-arena-back.onrender.com/api-docs](https://poke-arena-back.onrender.com/api-docs)
+- **💚 Health Check:** [https://poke-arena-back.onrender.com/health](https://poke-arena-back.onrender.com/health)
+
+> ⚠️ **Nota:** A aplicação está hospedada no plano gratuito do Render. O primeiro acesso pode levar ~30 segundos (cold start).
+
 ## 📋 Índice
 
+- [Aplicação Online](#-aplicação-online)
 - [Sobre](#sobre)
 - [Frontend](#frontend)
 - [Features](#features)
@@ -29,11 +46,18 @@
 
 PokéArena é uma API completa para gerenciamento de pokémons com sistema de batalhas baseado em probabilidade. O projeto implementa operações CRUD completas, sistema de batalhas com algoritmo probabilístico proporcional aos níveis dos pokémons, e todas as melhores práticas de desenvolvimento moderno.
 
+**📊 Desafio Técnico Jazida:**
+- ✅ 100% conforme com a especificação
+- ✅ 10 pontos (requisitos obrigatórios)
+- ✅ +8 pontos (opcionais: testes, documentação, observabilidade)
+- ✅ 57 testes passando (32 unitários + 25 E2E)
+- ✅ 100% code coverage
+
 ## 🎨 Frontend
 
 A interface web do PokéArena está disponível em um repositório separado:
 
-- **Repositório:** [poke-arena-front](https://github.com/SEU_USUARIO/poke-arena-front)
+- **Repositório:** [poke-arena-front](https://github.com/YMdv/poke-arena-front)
 - **Tecnologias:** React 18 + Vite + TypeScript + Chakra UI
 - **Features:** Interface completa para CRUD de pokémons e sistema de batalhas
 
@@ -133,7 +157,7 @@ Ideal para desenvolvimento local com hot-reload rápido:
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/SEU_USUARIO/poke-arena-back.git
+git clone https://github.com/YMdv/poke-arena-back.git
 cd poke-arena-back
 
 # 2. Instale as dependências
@@ -157,7 +181,7 @@ Para rodar tudo containerizado (PostgreSQL + API):
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/SEU_USUARIO/poke-arena-back.git
+git clone https://github.com/YMdv/poke-arena-back.git
 cd poke-arena-back
 
 # 2. Copie o arquivo de ambiente
@@ -175,7 +199,7 @@ Requer PostgreSQL instalado localmente:
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/SEU_USUARIO/poke-arena-back.git
+git clone https://github.com/YMdv/poke-arena-back.git
 cd poke-arena-back
 
 # 2. Instale as dependências
@@ -483,7 +507,21 @@ Para mais detalhes, veja [docker/README.md](./docker/README.md)
 
 ## 🚀 Deploy
 
-### Preparação
+### 🌐 Aplicação em Produção
+
+A aplicação já está deployada e disponível online:
+
+- **Frontend:** [https://poke-arena-app.onrender.com/](https://poke-arena-app.onrender.com/)
+- **Backend API:** [https://poke-arena-back.onrender.com](https://poke-arena-back.onrender.com)
+- **Swagger Docs:** [https://poke-arena-back.onrender.com/api-docs](https://poke-arena-back.onrender.com/api-docs)
+
+**Plataforma:** Render (plano gratuito)
+**Banco de Dados:** PostgreSQL 16 (Render)
+**CI/CD:** GitHub Actions com deploy automático
+
+---
+
+### Preparação para Novo Deploy
 
 1. Configure as variáveis de ambiente de produção
 2. Configure secrets no GitHub (se usar CD)
