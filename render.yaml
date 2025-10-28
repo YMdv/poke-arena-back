@@ -37,7 +37,7 @@ services:
     # Start Command: roda migrations ANTES de iniciar a aplicação
     # Garante que o banco está sempre atualizado antes do app iniciar
     # Usa caminho absoluto porque o working dir pode ser diferente
-    startCommand: yarn migration:run && node /opt/render/project/dist/main.js
+    startCommand: yarn migration:run && yarn start
 
     # Health Check: endpoint que a Render monitora continuamente
     # Se falhar, reinicia automaticamente o serviço
