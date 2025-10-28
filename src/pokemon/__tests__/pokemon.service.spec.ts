@@ -3,6 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreatePokemonDto } from '../dto/create-pokemon.dto';
 import { UpdatePokemonDto } from '../dto/update-pokemon.dto';
+import { PokemonResponseDto } from '../dto/pokemon-response.dto';
 import { Pokemon } from '../entities/pokemon.entity';
 import { PokemonType } from '../enums/pokemon-type.enum';
 import { PokemonService } from '../pokemon.service';
@@ -11,6 +12,16 @@ import {
   mockPokemonRepository,
   resetPokemonRepositoryMocks,
 } from './mocks/pokemon-repository.mock';
+
+/**
+ * Helper: Converte entidade Pokemon para DTO de resposta
+ */
+const toResponseDto = (pokemon: Pokemon): PokemonResponseDto => ({
+  id: pokemon.id,
+  tipo: pokemon.tipo,
+  treinador: pokemon.treinador,
+  nivel: pokemon.nivel,
+});
 
 describe('PokemonService', () => {
   let service: PokemonService;
@@ -60,7 +71,7 @@ describe('PokemonService', () => {
         active: true,
       });
       expect(mockPokemonRepository.save).toHaveBeenCalledWith(expectedPokemon);
-      expect(result).toEqual(mockPokemon);
+      expect(result).toEqual(toResponseDto(mockPokemon));
     });
   });
 
@@ -75,7 +86,7 @@ describe('PokemonService', () => {
         where: { active: true },
         order: { created_at: 'DESC' },
       });
-      expect(result).toEqual(mockPokemons);
+      expect(result).toEqual(mockPokemons.map(toResponseDto));
     });
 
     it('should return empty array when no active pokemons exist', async () => {
@@ -96,17 +107,15 @@ describe('PokemonService', () => {
       expect(mockPokemonRepository.findOne).toHaveBeenCalledWith({
         where: { id: mockPokemon.id, active: true },
       });
-      expect(result).toEqual(mockPokemon);
+      expect(result).toEqual(toResponseDto(mockPokemon));
     });
 
     it('should throw NotFoundException when pokemon not found', async () => {
       mockPokemonRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne('non-existent-id')).rejects.toThrow(
-        NotFoundException,
-      );
-      await expect(service.findOne('non-existent-id')).rejects.toThrow(
-        'Pokémon com ID non-existent-id não encontrado',
+      await expect(service.findOne(1)).rejects.toThrow(NotFoundException);
+      await expect(service.findOne(2)).rejects.toThrow(
+        'Pokémon com ID 2 não encontrado',
       );
     });
 
@@ -134,11 +143,11 @@ describe('PokemonService', () => {
     it('should throw NotFoundException when pokemon not found', async () => {
       mockPokemonRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOneInternal('non-existent-id')).rejects.toThrow(
+      await expect(service.findOneInternal(1)).rejects.toThrow(
         NotFoundException,
       );
-      await expect(service.findOneInternal('non-existent-id')).rejects.toThrow(
-        'Pokémon com ID non-existent-id não encontrado ou inativo',
+      await expect(service.findOneInternal(2)).rejects.toThrow(
+        'Pokémon com ID 2 não encontrado ou inativo',
       );
     });
 
@@ -150,7 +159,7 @@ describe('PokemonService', () => {
         NotFoundException,
       );
       await expect(service.findOneInternal(mockPokemon.id)).rejects.toThrow(
-        'Pokémon com ID 123e4567-e89b-12d3-a456-426614174000 não encontrado ou inativo',
+        'Pokémon com ID 30 não encontrado ou inativo',
       );
     });
   });
@@ -183,9 +192,9 @@ describe('PokemonService', () => {
         treinador: 'Gary Oak',
       };
 
-      await expect(
-        service.update('non-existent-id', updateDto),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.update(1, updateDto)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -209,9 +218,7 @@ describe('PokemonService', () => {
     it('should throw NotFoundException when pokemon not found', async () => {
       mockPokemonRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.remove('non-existent-id')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.remove(1)).rejects.toThrow(NotFoundException);
     });
   });
 

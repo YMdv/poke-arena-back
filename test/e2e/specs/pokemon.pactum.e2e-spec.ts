@@ -12,10 +12,10 @@ import {
   updateTrainerPayload,
   emptyUpdatePayload,
 } from '../fixtures/pokemon.fixtures';
-import { nonExistentUUID } from '../fixtures/battle.fixtures';
+import { nonExistentId } from '../fixtures/battle.fixtures';
 
 describe('Pokemon (e2e - Pactum)', () => {
-  let createdPokemonId: string;
+  let createdPokemonId: number;
 
   describe('POST /pokemons', () => {
     it('should create a new pokemon', async () => {
@@ -28,15 +28,14 @@ describe('Pokemon (e2e - Pactum)', () => {
           tipo: 'pikachu',
           treinador: 'Ash Ketchum',
           nivel: 1,
-          active: true,
         })
         .toss();
 
       expect(response.json).toHaveProperty('id');
+      expect(typeof response.json.id).toBe('number');
       expect(response.json.tipo).toBe('pikachu');
       expect(response.json.treinador).toBe('Ash Ketchum');
       expect(response.json.nivel).toBe(1);
-      expect(response.json.active).toBe(true);
       createdPokemonId = response.json.id;
     });
 
@@ -104,7 +103,7 @@ describe('Pokemon (e2e - Pactum)', () => {
     });
 
     it('should return 404 when pokemon not found', async () => {
-      await spec().get(`/pokemons/${nonExistentUUID}`).expectStatus(404);
+      await spec().get(`/pokemons/${nonExistentId}`).expectStatus(404);
     });
   });
 
@@ -127,7 +126,7 @@ describe('Pokemon (e2e - Pactum)', () => {
 
     it('should return 404 when pokemon not found', async () => {
       await spec()
-        .put(`/pokemons/${nonExistentUUID}`)
+        .put(`/pokemons/${nonExistentId}`)
         .withJson(updateTrainerPayload('Gary Oak'))
         .expectStatus(404);
     });
@@ -150,7 +149,7 @@ describe('Pokemon (e2e - Pactum)', () => {
     });
 
     it('should return 404 when trying to delete non-existent pokemon', async () => {
-      await spec().delete(`/pokemons/${nonExistentUUID}`).expectStatus(404);
+      await spec().delete(`/pokemons/${nonExistentId}`).expectStatus(404);
     });
   });
 

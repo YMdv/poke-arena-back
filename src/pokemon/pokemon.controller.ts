@@ -8,6 +8,7 @@ import {
   Param,
   HttpCode,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -39,9 +40,7 @@ export class PokemonController {
     status: 400,
     description: 'Dados inválidos (tipo inválido ou dados faltando)',
   })
-  async create(
-    @Body() createPokemonDto: CreatePokemonDto,
-  ): Promise<PokemonResponseDto> {
+  async create(@Body() createPokemonDto: CreatePokemonDto) {
     return await this.pokemonService.create(createPokemonDto);
   }
 
@@ -53,14 +52,14 @@ export class PokemonController {
     description: 'Lista de pokémons retornada com sucesso',
     type: [PokemonResponseDto],
   })
-  async findAll(): Promise<PokemonResponseDto[]> {
+  async findAll() {
     return await this.pokemonService.findAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Buscar pokémon por ID' })
-  @ApiParam({ name: 'id', description: 'ID do pokémon', type: String })
+  @ApiParam({ name: 'id', description: 'ID do pokémon', type: Number })
   @ApiResponse({
     status: 200,
     description: 'Pokémon encontrado',
@@ -70,14 +69,14 @@ export class PokemonController {
     status: 404,
     description: 'Pokémon não encontrado',
   })
-  async findOne(@Param('id') id: string): Promise<PokemonResponseDto> {
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.pokemonService.findOne(id);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Atualizar treinador do pokémon' })
-  @ApiParam({ name: 'id', description: 'ID do pokémon', type: String })
+  @ApiParam({ name: 'id', description: 'ID do pokémon', type: Number })
   @ApiBody({ type: UpdatePokemonDto })
   @ApiResponse({
     status: 204,
@@ -88,16 +87,16 @@ export class PokemonController {
     description: 'Pokémon não encontrado',
   })
   async update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updatePokemonDto: UpdatePokemonDto,
-  ): Promise<void> {
+  ) {
     await this.pokemonService.update(id, updatePokemonDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Deletar pokémon' })
-  @ApiParam({ name: 'id', description: 'ID do pokémon', type: String })
+  @ApiParam({ name: 'id', description: 'ID do pokémon', type: Number })
   @ApiResponse({
     status: 204,
     description: 'Pokémon deletado com sucesso',
@@ -106,7 +105,7 @@ export class PokemonController {
     status: 404,
     description: 'Pokémon não encontrado',
   })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id', ParseIntPipe) id: number) {
     await this.pokemonService.remove(id);
   }
 }

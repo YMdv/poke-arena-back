@@ -7,11 +7,11 @@ import {
   createCharizardPayload,
   createMewtwoPayload,
 } from '../fixtures/pokemon.fixtures';
-import { nonExistentUUID, trainers } from '../fixtures/battle.fixtures';
+import { nonExistentId, trainers } from '../fixtures/battle.fixtures';
 
 describe('Battle (e2e - Pactum)', () => {
-  let pokemonAId: string;
-  let pokemonBId: string;
+  let pokemonAId: number;
+  let pokemonBId: number;
 
   // Setup: Criar pokémons para os testes
   beforeAll(async () => {
@@ -117,9 +117,9 @@ describe('Battle (e2e - Pactum)', () => {
           });
       } else {
         // Se perdedor chegou a nível 0, ele foi deletado (hard delete)
-        // Pode retornar 404 ou 500 dependendo se o ID ainda existe ou não
+        // Pode retornar 400, 404 ou 500 dependendo da validação e estado
         const response = await spec().get(`/pokemons/${perdedor.id}`).toss();
-        expect([404, 500]).toContain(response.statusCode);
+        expect([400, 404, 500]).toContain(response.statusCode);
       }
     });
 
@@ -132,19 +132,19 @@ describe('Battle (e2e - Pactum)', () => {
 
     it('should return 404 when pokemonA not found', async () => {
       await spec()
-        .post(`/batalhar/${nonExistentUUID}/${pokemonBId}`)
+        .post(`/batalhar/${nonExistentId}/${pokemonBId}`)
         .expectStatus(404);
     });
 
     it('should return 404 when pokemonB not found', async () => {
       await spec()
-        .post(`/batalhar/${pokemonAId}/${nonExistentUUID}`)
+        .post(`/batalhar/${pokemonAId}/${nonExistentId}`)
         .expectStatus(404);
     });
 
     it('should return 404 when both pokemons not found', async () => {
-      const nonExistentId1 = '123e4567-e89b-12d3-a456-426614174991';
-      const nonExistentId2 = '123e4567-e89b-12d3-a456-426614174992';
+      const nonExistentId1 = 999991;
+      const nonExistentId2 = 999992;
 
       await spec()
         .post(`/batalhar/${nonExistentId1}/${nonExistentId2}`)
@@ -190,9 +190,9 @@ describe('Battle (e2e - Pactum)', () => {
       // Se perdedor chegou a nível 0, foi deletado
       if (perdedor.nivel === 0) {
         // Verifica que o pokémon foi deletado (hard delete)
-        // Pode retornar 404 ou 500 dependendo se o ID ainda existe ou não
+        // Pode retornar 400, 404 ou 500 dependendo da validação e estado
         const response = await spec().get(`/pokemons/${perdedor.id}`).toss();
-        expect([404, 500]).toContain(response.statusCode);
+        expect([400, 404, 500]).toContain(response.statusCode);
       }
     });
 

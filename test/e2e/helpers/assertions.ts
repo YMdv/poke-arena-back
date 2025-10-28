@@ -4,11 +4,10 @@ import { like } from 'pactum-matchers';
 export const pokemonSchema = {
   type: 'object',
   properties: {
-    id: { type: 'string' },
+    id: { type: 'number' },
     tipo: { type: 'string', enum: ['pikachu', 'charizard', 'mewtwo'] },
     treinador: { type: 'string' },
     nivel: { type: 'number', minimum: 0 },
-    active: { type: 'boolean' },
   },
   required: ['id', 'tipo', 'treinador', 'nivel'],
 };
@@ -17,11 +16,10 @@ export const pokemonSchema = {
 export const pokemonOrDeletedSchema = {
   type: 'object',
   properties: {
-    id: { type: 'string' },
+    id: { type: 'number' },
     tipo: { type: 'string', enum: ['pikachu', 'charizard', 'mewtwo'] },
     treinador: { type: 'string' },
     nivel: { type: 'number', minimum: 0 },
-    active: { type: 'boolean' },
   },
   required: ['tipo', 'treinador', 'nivel'], // id é opcional
 };
@@ -47,11 +45,10 @@ export const healthCheckSchema = {
 
 // Custom matchers usando pactum-matchers
 export const pokemonMatcher = {
-  id: like('uuid-v4'),
+  id: like(1),
   tipo: like('pikachu'),
   treinador: like('string'),
   nivel: like(1),
-  active: like(true),
 };
 
 export const battleResultMatcher = {

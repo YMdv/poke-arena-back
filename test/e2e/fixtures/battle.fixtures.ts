@@ -1,6 +1,6 @@
-// UUID não existente para testes negativos
-export const nonExistentUUID = '123e4567-e89b-12d3-a456-426614174999';
-export const nonExistentUUID2 = '123e4567-e89b-12d3-a456-426614174998';
+// IDs não existentes para testes negativos
+export const nonExistentId = 999999;
+export const nonExistentId2 = 999998;
 
 // Cenários de batalha
 export const battleScenarios = {

@@ -10,9 +10,10 @@ import { PokemonType } from '../enums/pokemon-type.enum';
 export class PokemonResponseDto {
   @ApiProperty({
     description: 'ID do pokémon',
-    example: 'uuid-1234-5678-9012',
+    example: 1,
+    type: Number,
   })
-  id: string;
+  id: number;
 
   @ApiProperty({
     description: 'Tipo do pokémon',

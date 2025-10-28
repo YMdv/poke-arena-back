@@ -5,7 +5,7 @@ import { PokemonType } from '../../enums/pokemon-type.enum';
  * Mock de um Pokemon para uso em testes
  */
 export const mockPokemon: Pokemon = {
-  id: '123e4567-e89b-12d3-a456-426614174000',
+  id: 30,
   tipo: PokemonType.PIKACHU,
   treinador: 'Ash Ketchum',
   nivel: 5,

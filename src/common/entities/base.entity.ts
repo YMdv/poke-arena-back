@@ -7,11 +7,11 @@ import {
 } from 'typeorm';
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('increment')
   @Index({
     unique: true,
   })
-  id: string;
+  id: number;
 
   @CreateDateColumn({
     type: 'timestamp',

@@ -2,13 +2,9 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { PokemonService } from '../pokemon/pokemon.service';
 import { Pokemon } from '../pokemon/entities/pokemon.entity';
 import { BattleResultDto } from './dto/battle-result.dto';
+import { PokemonResponseDto } from '../pokemon/dto/pokemon-response.dto';
 
 /**
- * BattleService
- *
- * Service responsável pela lógica de batalhas entre pokémons.
- * Implementa algoritmo probabilístico baseado nos níveis dos pokémons.
- *
  * Algoritmo:
  * - P(A vencer) = nivelA / (nivelA + nivelB)
  * - P(B vencer) = nivelB / (nivelA + nivelB)
@@ -22,15 +18,20 @@ export class BattleService {
   constructor(private readonly pokemonService: PokemonService) {}
 
   /**
-   * Realiza uma batalha entre dois pokémons
-   *
-   * @param pokemonAId - ID do primeiro pokémon
-   * @param pokemonBId - ID do segundo pokémon
-   * @returns Resultado da batalha com vencedor e perdedor
+   * Converte entidade para DTO de resposta
    */
+  private toResponseDto(pokemon: Pokemon): PokemonResponseDto {
+    return {
+      id: pokemon.id,
+      tipo: pokemon.tipo,
+      treinador: pokemon.treinador,
+      nivel: pokemon.nivel,
+    };
+  }
+
   async battle(
-    pokemonAId: string,
-    pokemonBId: string,
+    pokemonAId: number,
+    pokemonBId: number,
   ): Promise<BattleResultDto> {
     // Validação: pokémon não pode batalhar consigo mesmo
     if (pokemonAId === pokemonBId) {
@@ -53,18 +54,17 @@ export class BattleService {
 
     // Prepara resultado
     // Se perdedor chegou a nível 0, updatedLoser será null
-    const loserResult = updatedLoser || {
-      id: loser.id,
-      tipo: loser.tipo,
-      treinador: loser.treinador,
-      nivel: 0,
-      active: loser.active,
-      created_at: loser.created_at,
-      updated_at: loser.updated_at,
-    };
+    const loserResult: PokemonResponseDto = updatedLoser
+      ? this.toResponseDto(updatedLoser)
+      : {
+          id: loser.id,
+          tipo: loser.tipo,
+          treinador: loser.treinador,
+          nivel: 0,
+        };
 
     return {
-      vencedor: updatedWinner,
+      vencedor: this.toResponseDto(updatedWinner),
       perdedor: loserResult,
     };
   }

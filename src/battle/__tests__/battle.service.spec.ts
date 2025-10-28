@@ -53,7 +53,7 @@ describe('BattleService', () => {
         new NotFoundException('Pokémon com ID abc não encontrado ou inativo'),
       );
 
-      await expect(service.battle('abc', mockPokemonB.id)).rejects.toThrow(
+      await expect(service.battle(1, mockPokemonB.id)).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -62,10 +62,10 @@ describe('BattleService', () => {
       mockPokemonService.findOneInternal
         .mockResolvedValueOnce(mockPokemonA)
         .mockRejectedValueOnce(
-          new NotFoundException('Pokémon com ID xyz não encontrado ou inativo'),
+          new NotFoundException('Pokémon com ID 999 não encontrado ou inativo'),
         );
 
-      await expect(service.battle(mockPokemonA.id, 'xyz')).rejects.toThrow(
+      await expect(service.battle(mockPokemonA.id, 999)).rejects.toThrow(
         NotFoundException,
       );
     });

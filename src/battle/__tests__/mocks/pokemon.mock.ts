@@ -5,7 +5,7 @@ import { PokemonType } from '../../../pokemon/enums/pokemon-type.enum';
  * Mock do Pokemon A para testes de batalha
  */
 export const mockPokemonA: Pokemon = {
-  id: '123e4567-e89b-12d3-a456-426614174000',
+  id: 12,
   tipo: PokemonType.PIKACHU,
   treinador: 'Ash Ketchum',
   nivel: 3,
@@ -18,7 +18,7 @@ export const mockPokemonA: Pokemon = {
  * Mock do Pokemon B para testes de batalha
  */
 export const mockPokemonB: Pokemon = {
-  id: '987fcdeb-51a2-43d7-b123-987654321000',
+  id: 15,
   tipo: PokemonType.CHARIZARD,
   treinador: 'Gary Oak',
   nivel: 2,
