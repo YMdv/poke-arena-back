@@ -27,9 +27,6 @@ services:
     region: oregon  # us-west (mais barato) - alternativas: ohio (us-east), frankfurt (eu-central)
     plan: free  # Planos disponíveis: free, starter, standard, pro
 
-    # Versão do Node.js (mesma do .nvmrc)
-    nodeVersion: "24.8.0"
-
     # Branch principal para auto-deploy
     branch: main
 
@@ -39,7 +36,7 @@ services:
 
     # Start Command: roda migrations ANTES de iniciar a aplicação
     # Garante que o banco está sempre atualizado antes do app iniciar
-    startCommand: yarn migration:run && node /opt/render/project/dist/main.js
+    startCommand: sh -c 'cd /opt/render/project/src && pwd && ls -la && ls -la dist/ && yarn migration:run && node dist/main.js'
 
     # Health Check: endpoint que a Render monitora continuamente
     # Se falhar, reinicia automaticamente o serviço
