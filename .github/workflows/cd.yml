@@ -58,13 +58,6 @@ jobs:
       #     railway_token: ${{ secrets.RAILWAY_TOKEN }}
       #     service: pokearena-api
 
-      # Deploy para Render
-      - name: Deploy to Render
-        if: github.ref == 'refs/heads/main'
-        run: |
-          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
-        continue-on-error: false
-
       # Deploy para Vercel (exemplo)
       # - name: Deploy to Vercel
       #   uses: amondnet/vercel-action@v25
