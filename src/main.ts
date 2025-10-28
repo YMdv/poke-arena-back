@@ -19,8 +19,17 @@ async function bootstrap() {
   // Pega ConfigService
   const configService = app.get(ConfigService);
 
-  // Habilita CORS
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'http://localhost:5173', // Vite dev server
+      'http://localhost:5174', // Vite dev server (porta alternativa)
+      'http://localhost:3000', // React dev server
+      'http://localhost:3001', // Porta alternativa
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
 
   // Validação global de DTOs
   app.useGlobalPipes(
