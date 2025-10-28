@@ -35,7 +35,8 @@ services:
     branch: main
 
     # Build Command: instala dependências e compila TypeScript
-    buildCommand: yarn install && yarn build
+    # --production=false: instala devDependencies (necessário para @nestjs/cli)
+    buildCommand: yarn install --production=false && yarn build
 
     # Start Command: roda migrations ANTES de iniciar a aplicação
     # Garante que o banco está sempre atualizado antes do app iniciar
